@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:ShopList.Gui.ViewModels"
+             x:DataType="viewmodel:ShopListViewModel"
+             x:Class="ShopList.Gui.Views.ShopListPage"
+             Title="Lista de Compras">
+    <Grid
+        RowDefinitions="Auto,*"
+        Padding="8"
+        RowSpacing="6"
+        >
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0"
+            RowDefinitions="Auto,Auto"
+            RowSpacing="4"
+            ColumnSpacing="4"
+            ColumnDefinitions="Auto,*,Auto,Auto">
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                VerticalOptions="Center"
+                HorizontalOptions="End"
+                FontSize="Medium"
+                Text="Producto:"/>
+            <Entry
+                Grid.Column="1"
+                Grid.Row="0"
+                BackgroundColor="Gray"/>
+            <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                VerticalOptions="Center"
+                HorizontalOptions="End"
+                FontSize="Medium"
+                Text="Cantidad:"/>
+            <Entry
+                Grid.Column="1"
+                Grid.Row="1"
+                BackgroundColor="Gray"/>
+            <Button
+                Grid.Row="0"
+                Grid.Column="2"
+                FontSize="Medium"
+                Text="+"/>
+            <Button
+                Grid.Row="1"
+                Grid.Column="2"
+                FontSize="Medium"
+                Text="X"/>
+        </Grid>
+        <CollectionView
+            Grid.Row="1"
+            Grid.Column="0"
+            ItemsSource="{Binding Items}"
+            EmptyView="Aun no se han registrado productos"
+            BackgroundColor="DarkBlue">
+        </CollectionView>
+    </Grid>
+</ContentPage>
