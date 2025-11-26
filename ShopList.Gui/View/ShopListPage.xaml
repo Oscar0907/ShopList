@@ -52,12 +52,14 @@
                 Grid.Row="1"
                 Grid.Column="2"
                 FontSize="Medium"
-                Text="X"/>
+                Text="X"
+                Command="{Binding EliminarShopListItemCommand}"/>
         </Grid>
         <CollectionView
             Grid.Row="1"
             Grid.Column="0"
             ItemsSource="{Binding Items}"
+            SelectedItem="{Binding ItemSeleccionado}"
             EmptyView="Aun no se han registrado productos"
             BackgroundColor="Gray"
             SelectionMode="Single">
@@ -71,7 +73,7 @@
                         <Grid
                             ColumnDefinitions="Auto,*,Auto"
                             Padding="8,0"
-                            Background="LightSteelBlue"
+                            Background="White"
                             >
                             <CheckBox
                                 IsChecked="{Binding Comprado}"/>

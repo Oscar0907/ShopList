@@ -13,6 +13,8 @@ namespace ShopList.Gui.ViewModels
         private string _nombreDelArticulo = string.Empty;
         [ObservableProperty]
         private int _cantidadAComprar = 1;
+        [ObservableProperty]
+        private Item? _itemSeleccionado;
 
         //public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -78,7 +80,28 @@ namespace ShopList.Gui.ViewModels
         [RelayCommand]
         public void EliminarShopListItem()
         {
-
+            if (ItemSeleccionado != null)
+            {
+                int indice = Items.IndexOf(ItemSeleccionado);
+                Item? nuevoSeleccionado;
+                if (Items.Count > 1)
+                {
+                    if (indice < Items.Count - 1)
+                    {
+                        nuevoSeleccionado = Items[indice + 1];
+                    }
+                    else
+                    {
+                        nuevoSeleccionado = Items[indice - 1];
+                    }
+                }
+                else
+                {
+                    nuevoSeleccionado = null;
+                }
+                Items.Remove(ItemSeleccionado);
+                ItemSeleccionado = nuevoSeleccionado;
+            }
         }
         private void CargarDatos()
         {
