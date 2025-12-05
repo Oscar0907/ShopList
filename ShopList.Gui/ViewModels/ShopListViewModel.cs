@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ShopList.Gui.Model;
+using ShopList.Gui.Persistence;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 //using System.ComponentModel;
 //using System.Windows.Input;
 
@@ -14,66 +16,43 @@ namespace ShopList.Gui.ViewModels
         [ObservableProperty]
         private int _cantidadAComprar = 1;
         [ObservableProperty]
-        private Item? _itemSeleccionado;
+        private Item? _itemSeleccionado = null;
 
-        //public event PropertyChangedEventHandler? PropertyChanged;
-
-        public ObservableCollection<Item> Items { get; }
-
-        //public string NombreDelArticulo
-        //{
-        //    get => _nombreDelArticulo;
-        //    set
-        //    {
-        //        if(value != _nombreDelArticulo)
-        //        {
-        //            _nombreDelArticulo = value;
-        //            OnPropertyChanged(nameof(NombreDelArticulo));
-        //        }
-        //    }
-        //}
-        //public int CantidadAComprar
-        //{
-        //    get => _cantidadAComprar;
-        //    set
-        //    {
-        //        if (value != _cantidadAComprar)
-        //        {
-        //            _cantidadAComprar = value;
-        //            OnPropertyChanged(nameof(CantidadAComprar));
-        //        }
-        //    }
-        //}
-
-        //public ICommand AgregarShopListItemCommand 
-        //{ 
-        //    get; 
-        //    private set; 
-        //}
+        [ObservableProperty]
+        private ObservableCollection<Item>? _items = null;
+        private ShopListDataBase? _database = null;
 
         public ShopListViewModel()
         {
+            _database = new ShopListDataBase();
             Items = new ObservableCollection<Item>();
-            CargarDatos();
-            //AgregarShopListItemCommand = new Command(AgregarShopListItem);
+            GetItems();
+            if (Items.Count > 0)
+            {
+                ItemSeleccionado = Items.First();
+            }
+            else
+            {
+                ItemSeleccionado = null;
+            }
+
         }
 
         [RelayCommand]
-        public void AgregarShopListItem()
+        public async Task AgregarShopListItem()
         {
             if(string.IsNullOrEmpty(NombreDelArticulo) || CantidadAComprar <= 0)
             {
                 return;
             }
-            Random generador = new Random();
             var item = new Item
             {
-                Id = generador.Next(),
                 Nombre = NombreDelArticulo,
                 Cantidad = CantidadAComprar,
                 Comprado = false
             };
-            Items.Add(item);
+            await _database.SaveItemAsync(item);
+            GetItems();
             NombreDelArticulo = string.Empty;
             CantidadAComprar = 1;
         }
@@ -103,6 +82,15 @@ namespace ShopList.Gui.ViewModels
                 ItemSeleccionado = nuevoSeleccionado;
             }
         }
+        private async void GetItems()
+        {
+
+            IEnumerable<Item> itemsFromDb = await _database.GetAllItemsAsync();
+            Items = new ObservableCollection<Item>(itemsFromDb);
+
+        }
+
+
         private void CargarDatos()
         {
             Items.Add(new Item()
@@ -130,9 +118,5 @@ namespace ShopList.Gui.ViewModels
 
             });
         }
-        //private void OnPropertyChanged(string propertyName) 
-        //{
-        //    PropertyChanged?.Invoke (this, new PropertyChangedEventArgs(propertyName));
-        //}
     }
 }
